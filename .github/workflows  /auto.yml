@@ -1,0 +1,61 @@
+name: Go Build and Package (ZIP)
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_url:
+        description: 'Git repository URL'
+        required: true
+        default: 'https://github.com/yourusername/yourrepo.git'
+      go_version:
+        description: 'Go version (e.g., 1.18, 1.19, 1.20)'
+        required: true
+        default: '1.20'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout the specified project
+      uses: actions/checkout@v2
+      with:
+        repository: ${{ github.event.inputs.project_url }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Go ${{ github.event.inputs.go_version }}
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{ github.event.inputs.go_version }}
+
+    - name: Cache Go modules
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/.go/pkg/mod
+        key: ${{ runner.os }}-go-${{ github.event.inputs.go_version }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-${{ github.event.inputs.go_version }}-
+
+    - name: Install dependencies
+      run: go mod tidy
+
+    - name: Build the project
+      run: |
+        mkdir -p output
+        go build -o output/my-app
+
+    - name: Create ZIP package
+      run: |
+        cd output
+        zip -r my-app.zip my-app
+
+    - name: Archive the ZIP package
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-app-zip
+        path: output/my-app.zip
+
+    - name: Clean up
+      run: rm -rf output

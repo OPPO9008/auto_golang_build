@@ -7,7 +7,7 @@ on:
         description: 'Git repository URL'
         required: true
         default: 'OPPO9008/XrayR.git'
-      project_u:
+      project_branch:
         description: 'branch, tag or SHA'
         required: true
         default: 'master'
@@ -25,7 +25,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: ${{ github.event.inputs.project_url }}
-        ref: ''
+        ref: ${{ github.event.inputs.project_branch }}
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Go ${{ github.event.inputs.go_version }}

@@ -6,7 +6,7 @@ on:
       project_url:
         description: 'Git repository URL'
         required: true
-        default: 'https://github.com/yourusername/yourrepo.git'
+        default: 'OPPO9008/XrayR.git'
       go_version:
         description: 'Go version (e.g., 1.18, 1.19, 1.20)'
         required: true

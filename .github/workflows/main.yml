@@ -45,7 +45,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-       go get -u Xray-core@1.8.24
+       go get -u Xray-core@v1.8.24
        go mod tidy
 
     - name: Build the project

@@ -18,7 +18,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     
     steps:
     - name: Checkout the specified project
@@ -49,18 +49,13 @@ jobs:
     - name: Build the project
       run: |
         mkdir -p output
-        go build -o output/my-app
-
-    - name: Create ZIP package
-      run: |
-        cd output
-        zip -r my-app.zip my-app
+        go build -o output/my-app -trimpath
 
     - name: Archive the ZIP package
       uses: actions/upload-artifact@v4
       with:
-        name: my-app-zip
-        path: output/my-app.zip
+        name: my-app
+        path: output/my-app
         retention-days: 7  # 保留 7 天，按需调整
 
     - name: Clean up
